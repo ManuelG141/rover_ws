@@ -1,0 +1,40 @@
+<launch>
+
+    <arg name="model" default="$(find rover_pkg)/urdf/rover.urdf.xacro"/>
+    <arg name="gui" default="true" />
+    <arg name="show_rviz" default="true"/>
+    <arg name="rvizconfig" default="$(find rover_pkg)/rviz/config.rviz" />
+
+    <!-- Lidar Launch JETSON -->
+    <!-- <include file="$(find rplidar_ros)/launch/rplidar_a1.launch">
+        <arg name="frame_id" value="laser"/>
+        <arg name="serial_port" value="/dev/ttyUSB0"/>
+        <arg name="serial_baudrate" value="115200"/>
+    </include> -->
+
+    <!-- Imu launch JETSON -->
+    <!-- <include file="$(find wit_ros_imu)/launch/wit_imu.launch">
+        <arg name="type" value="normal" />
+	    <arg name="serial_port" value="/dev/ttyUSB1"/>
+	    <arg name="serial_baudrate" value="115200"/>
+    </include> -->
+
+    <!-- Hector Slam launch -->
+    <include file="$(find hector_slam_launch)/launch/tutorial.launch">
+        <arg name="show_rviz" value="false"/> <!-- Don't let hector slam execute rviz -->
+    </include>
+
+    <!-- URDF Robot model -->
+    <!-- <param name="robot_description" command="$(find xacro)/xacro $(arg model)" /> -->
+    <param name="robot_description" command="$(find xacro)/xacro $(arg model)" />
+
+    <node if="$(arg gui)" name="joint_state_publisher" pkg="joint_state_publisher_gui" type="joint_state_publisher_gui">
+        <param name="rate" value="130.0"/>  <!-- Set the desired rate (Hz) -->
+    </node>
+    <node unless="$(arg gui)" name="joint_state_publisher" pkg="joint_state_publisher" type="joint_state_publisher" />
+    <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" />
+    <node if="$(arg show_rviz)" name="rviz" pkg="rviz" type="rviz" args="-d $(arg rvizconfig)" required="true" />
+
+    <node pkg="tf2_ros" type="static_transform_publisher" name="base_to_laser_broadcaster" args="0.0 0.0 0.15 0 0 0 base_link laser" />
+
+</launch>

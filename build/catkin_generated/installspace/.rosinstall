@@ -1,0 +1,2 @@
+- setup-file:
+    local-name: /home/manuel/rover_ws/install/setup.sh
