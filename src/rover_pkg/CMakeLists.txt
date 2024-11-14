@@ -187,7 +187,7 @@ include_directories(
 #   # myfile2
 #   DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}
 # )
-install(DIRECTORY meshes launch rviz urdf
+install(DIRECTORY meshes launch rviz urdf src
   DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}
 )
 

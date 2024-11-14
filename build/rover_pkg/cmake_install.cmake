@@ -58,6 +58,7 @@ if("x${CMAKE_INSTALL_COMPONENT}x" STREQUAL "xUnspecifiedx" OR NOT CMAKE_INSTALL_
     "/home/manuel/rover_ws/src/rover_pkg/launch"
     "/home/manuel/rover_ws/src/rover_pkg/rviz"
     "/home/manuel/rover_ws/src/rover_pkg/urdf"
+    "/home/manuel/rover_ws/src/rover_pkg/src"
     )
 endif()
 

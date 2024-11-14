@@ -5,6 +5,13 @@
     <arg name="show_rviz" default="true"/>
     <arg name="rvizconfig" default="$(find rover_pkg)/rviz/config.rviz" />
 
+    <arg name="odom_frame" default="base"/>
+    <arg name="base_footprint" default="base_footprint"/>
+    <arg name="base_stabilized" default="base_stabilized" />
+    <arg name="base_frame" default="base_link" />
+    <arg name="laser_frame" default="laser" />
+    
+
     <!-- Lidar Launch JETSON -->
     <!-- <include file="$(find rplidar_ros)/launch/rplidar_a1.launch">
         <arg name="frame_id" value="laser"/>
@@ -19,14 +26,50 @@
 	    <arg name="serial_baudrate" value="115200"/>
     </include> -->
 
+    <!-- Obstacles detection node -->
+    <node pkg="rover_pkg" type="detection.py" name="obstacles_detection" />
+
+    <!-- Hector Imu Attitude to Tf launch -->
+    <!-- <include file="$(find hector_imu_attitude_to_tf)/launch/example.launch">
+        <arg name="imu_topic" value="wit/imu" />
+	    <arg name="base_frame" value="$(arg base_frame)"/>
+	    <arg name="base_stabilized_frame" value="$(arg base_stabilized)"/>
+    </include> -->
+
+    <!-- Hector Imu tools launch -->
+    <!-- <include file="$(find hector_imu_attitude_to_tf)/launch/example.launch">
+        <arg name="imu_topic" value="wit/imu" />
+	    <arg name="base_frame" value="base_footprint"/>
+	    <arg name="base_stabilized_frame" value="base_stabilized"/>
+    </include> -->
+
+    <!-- Usb cam launch -->
+    <!-- <node name="usb_cam" pkg="usb_cam" type="usb_cam_node" output="screen" >
+        <param name="video_device" value="/dev/video0" />
+        <param name="image_width" value="640" />
+        <param name="image_height" value="480" />
+        <param name="pixel_format" value="yuyv" />
+        <param name="color_format" value="yuv422p" />
+        <param name="camera_frame_id" value="usb_cam" />
+        <param name="io_method" value="mmap"/>
+    </node> -->
+    
+    <!-- View image launch -->
+    <!-- <node name="image_view" pkg="image_view" type="image_view" respawn="false" output="screen">
+        <remap from="image" to="/usb_cam/image_raw"/>
+        <param name="autosize" value="true" />
+    </node> -->
+
     <!-- Hector Slam launch -->
     <include file="$(find hector_slam_launch)/launch/tutorial.launch">
         <arg name="show_rviz" value="false"/> <!-- Don't let hector slam execute rviz -->
+        <arg name="base_frame" value="$(arg base_footprint)"/>
+        <arg name="odom_frame" value="$(arg base_footprint)"/>
     </include>
 
     <!-- URDF Robot model -->
     <!-- <param name="robot_description" command="$(find xacro)/xacro $(arg model)" /> -->
-    <param name="robot_description" command="$(find xacro)/xacro $(arg model)" />
+    <param name="robot_description" command="$(find xacro)/xacro $(arg model) odom_frame:=$(arg odom_frame) base_footprint_def:=$(arg base_footprint) base_stabilized:=$(arg base_stabilized) base_frame:=$(arg base_frame) laser_frame:=$(arg laser_frame)" />
 
     <node if="$(arg gui)" name="joint_state_publisher" pkg="joint_state_publisher_gui" type="joint_state_publisher_gui">
         <param name="rate" value="130.0"/>  <!-- Set the desired rate (Hz) -->
@@ -35,6 +78,6 @@
     <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" />
     <node if="$(arg show_rviz)" name="rviz" pkg="rviz" type="rviz" args="-d $(arg rvizconfig)" required="true" />
 
-    <node pkg="tf2_ros" type="static_transform_publisher" name="base_to_laser_broadcaster" args="0.0 0.0 0.15 0 0 0 base_link laser" />
+    <!-- <node pkg="tf2_ros" type="static_transform_publisher" name="base_to_laser_broadcaster" args="0.0 0.0 0.15 0 0 0 base_link laser" /> -->
 
 </launch>
