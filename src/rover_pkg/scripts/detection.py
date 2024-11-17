@@ -164,16 +164,16 @@ def callback(data):
         marker.pose.position.y = y
         marker.pose.position.z = 0  # Para 2D LiDAR
         marker.pose.orientation.w = 1.0
-        marker.scale.x = 0.2
-        marker.scale.y = 0.2
-        marker.scale.z = 0.2
+        marker.scale.x = 0.4
+        marker.scale.y = 0.4
+        marker.scale.z = 0.4
 
         # Color del marcador
         if distan < 0.6:
             marker.color.r = 1.0
             marker.color.g = 0.0
             marker.color.b = 0.0
-            marker.color.a = 0.3  # Alpha (transparencia)
+            marker.color.a = 0.6  # Alpha (transparencia)
         else:
             marker.color.r = 0.0
             marker.color.g = 1.0
